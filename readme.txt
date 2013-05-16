@@ -20,6 +20,8 @@ This mention plugin add two features :
 * In the comments field, when an user entered the "@" symbol, it allows, through an autocompletion system, to quote (or poke) a preceding commentator.
 * Once comments validated, the mentioned names take the appearance of buttons. When the user clicks on it, window scrolls to the preceding comment from the person named. A class is added to it, for temporarily customize it in CSS.
 
+This WordPress plugin is based on ["jquery-sew" jQuery plugin](https://github.com/tactivos/jquery-sew), by [mural.ly](https://mural.ly/).
+
 == Installation ==
 
 = For a non-ajax website =
