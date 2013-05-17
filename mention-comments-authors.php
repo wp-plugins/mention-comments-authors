@@ -136,6 +136,7 @@ SEND EMAILS TO POKED ONES
 * this function send email for poked commentators
 
 * @uses mca_email_poked_ones FUNCTION to send emails (if have to...). It based on comment_post ACTION HOOK
+* @uses mca_send_email_on_mention FILTER to disable sendings
 
 * @var comment OBJECT to store current comment datas
 * @var prev_authors ARRAY contain lists of comment's authors (including emails...)
@@ -166,4 +167,5 @@ function mca_email_poked_ones( $comment_id ) {
         wp_mail( $mail, $subject, $message );
     }
 }
-add_action( 'comment_post', 'mca_email_poked_ones', 90 ); // Launching after spam test
+if( add_filter( 'mca_send_email_on_mention', true ) )
+    add_action( 'comment_post', 'mca_email_poked_ones', 90 ); // Launching after spam test
