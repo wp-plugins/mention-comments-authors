@@ -136,7 +136,9 @@ SEND EMAILS TO POKED ONES
 * this function send email for poked commentators
 
 * @uses mca_email_poked_ones FUNCTION to send emails (if have to...). It based on comment_post ACTION HOOK
-* @uses mca_send_email_on_mention FILTER to disable sendings
+* @uses mca_send_email_on_mention FILTER HOOK to disable sendings
+* @uses mca-email-subject FILTER HOOK to alter email subject
+* @uses mca-email-message FILTER HOOK to alter email content
 
 * @var comment OBJECT to store current comment datas
 * @var prev_authors ARRAY contain lists of comment's authors (including emails...)
