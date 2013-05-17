@@ -75,7 +75,7 @@ function mca_modify_comment_text( $content, $com ) {
             $mcaAuthors[ sanitize_title( $com->comment_author ) ] = $newEntry;
     }
     //Rearrange content
-    $modifiedcontent = preg_replace_callback('/(?:^|\s)\@([a-zA-Z0-9-]*)(?:$|\s)/', 'mca_comment_callback', $content);
+    $modifiedcontent = preg_replace_callback('/(?:^|\s)\@([a-zA-Z0-9-]*)(?:$|\s|\.|,)/', 'mca_comment_callback', $content);
     if( apply_filters( 'mcaajaxenable', false ) )
         return '<div class="mca-author" data-name="' . sanitize_title( $com->comment_author ) . '" data-realname="' . esc_attr( $com->comment_author ) . '">' . $modifiedcontent . '</div>';
     else
@@ -151,7 +151,7 @@ function mca_email_poked_ones( $comment_id ) {
     $comment = get_comment( $comment_id );
     $prev_authors = mca_get_previous_commentators( $comment->comment_post_ID, $comment_id, true );
     //do preg_match
-    $pattern = '/(?:^|\s)\@(' . implode( '|', array_keys( $prev_authors ) ) . ')(?:$|\s)/';
+    $pattern = '/(?:^|\s)\@(' . implode( '|', array_keys( $prev_authors ) ) . ')(?:$|\s|\.|,)/';
     preg_match_all( $pattern, $comment->comment_content, $matches );
 
     foreach( $matches[1] as $m ) {
