@@ -98,19 +98,20 @@ RETRIEVE AUTHORS NAMES ON THE OTHER SIDE (SAVING ONE)
 
 * @uses mcaajaxenable FILTER HOOK to turn plugin into ajax mod (another script is loaded, different functions are used)
 */
-function mca_printnames(){
-    global $mcaAuthors;
+function mca_printnames() {
+    if( ! apply_filters( 'mcaajaxenable', false ) ) {
+        global $mcaAuthors;
 
-    //reorder $mcaAuthors
-    $authors = array();
-    foreach( $mcaAuthors as $k => $a )
-        $authors[] = array( 'val' => $k, 'meta' => $a );
+        //reorder $mcaAuthors
+        $authors = array();
+        foreach( $mcaAuthors as $k => $a )
+            $authors[] = array( 'val' => $k, 'meta' => $a );
 
-    if( ! apply_filters( 'mcaajaxenable', false ) )
-        wp_localize_script( 'mca-comment-script', 'mcaAuthors', $authors );
+        if( ! apply_filters( 'mcaajaxenable', false ) )
+            wp_localize_script( 'mca-comment-script', 'mcaAuthors', $authors );
+    }
 }
-if( ! apply_filters( 'mcaajaxenable', false ) )
-    add_action( 'comment_form', 'mca_printnames' );
+add_action( 'comment_form', 'mca_printnames' );
 
 /**
 RETRIEVE LAST COMMENTATORS KEYS/NAMES
@@ -148,26 +149,27 @@ SEND EMAILS TO POKED ONES
 
 */
 function mca_email_poked_ones( $comment_id ) {
-    $comment = get_comment( $comment_id );
-    $prev_authors = mca_get_previous_commentators( $comment->comment_post_ID, $comment_id, true );
-    //do preg_match
-    $pattern = '/(?:^|\s)\@(' . implode( '|', array_keys( $prev_authors ) ) . ')(?:$|\s|\.|,)/';
-    preg_match_all( $pattern, $comment->comment_content, $matches );
+    if( add_filter( 'mca_send_email_on_mention', true ) ) {
+        $comment = get_comment( $comment_id );
+        $prev_authors = mca_get_previous_commentators( $comment->comment_post_ID, $comment_id, true );
+        //do preg_match
+        $pattern = '/(?:^|\s)\@(' . implode( '|', array_keys( $prev_authors ) ) . ')(?:$|\s|\.|,)/';
+        preg_match_all( $pattern, $comment->comment_content, $matches );
 
-    foreach( $matches[1] as $m ) {
-        $mail = $prev_authors[ $m ][1];
-        $name = $prev_authors[ $m ][0];
-        $titre = get_the_title( $comment->comment_post_ID );
+        foreach( $matches[1] as $m ) {
+            $mail = $prev_authors[ $m ][1];
+            $name = $prev_authors[ $m ][0];
+            $titre = get_the_title( $comment->comment_post_ID );
 
-        $subject = wp_sprintf( __( ' %s replied to your comment on the article &laquo;%s&raquo;' , 'mca' ), $comment->comment_author, $titre );
-        $subject = apply_filters( 'mca-email-subject', $subject, $comment, $name, $mail, $titre );
+            $subject = wp_sprintf( __( ' %s replied to your comment on the article &laquo;%s&raquo;' , 'mca' ), $comment->comment_author, $titre );
+            $subject = apply_filters( 'mca-email-subject', $subject, $comment, $name, $mail, $titre );
 
-        $message = '<div><h1>' . $subject . '</h1><div style="Border:5px solid grey;padding:1em;">' . apply_filters( 'the_content', wp_trim_words( $comment->comment_content, 25 ) ) . "</div></div><p>" . __( 'Read post', 'mca' ) . ' : <a href="' . get_permalink( $comment->comment_post_ID ) . '">' . $titre . '</a> ' . __( 'on', 'mca' ) . ' <a href="' . get_bloginfo( 'url' ) . '">' . get_bloginfo( 'name' ) . '</a></p>';
-        $message = apply_filters( 'mca-email-message', $message, $comment, $name, $mail, $titre );
+            $message = '<div><h1>' . $subject . '</h1><div style="Border:5px solid grey;padding:1em;">' . apply_filters( 'the_content', wp_trim_words( $comment->comment_content, 25 ) ) . "</div></div><p>" . __( 'Read post', 'mca' ) . ' : <a href="' . get_permalink( $comment->comment_post_ID ) . '">' . $titre . '</a> ' . __( 'on', 'mca' ) . ' <a href="' . get_bloginfo( 'url' ) . '">' . get_bloginfo( 'name' ) . '</a></p>';
+            $message = apply_filters( 'mca-email-message', $message, $comment, $name, $mail, $titre );
 
-        add_filter( 'wp_mail_content_type', create_function( '', 'return "text/html"; ' ) );
-        wp_mail( $mail, $subject, $message );
+            add_filter( 'wp_mail_content_type', create_function( '', 'return "text/html"; ' ) );
+            wp_mail( $mail, $subject, $message );
+        }
     }
 }
-if( add_filter( 'mca_send_email_on_mention', true ) )
-    add_action( 'comment_post', 'mca_email_poked_ones', 90 ); // Launching after spam test
+add_action( 'comment_post', 'mca_email_poked_ones', 90 ); // Launching after spam test

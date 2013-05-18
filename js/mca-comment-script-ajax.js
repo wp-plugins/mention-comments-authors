@@ -7,6 +7,7 @@ function mcaAjaxChange(){
         $elems.each(function(index){
             mcaAuthors.push({val:$(this).attr('data-name'),meta:$(this).attr('data-realname')});
         });
+        sort_and_unique( mcaAuthors );
 
         //ADD AUTOSUGGEST
         var customItemTemplate = "<div><span />&nbsp;<small /></div>";
@@ -49,3 +50,22 @@ function mcaAjaxChange(){
     });
 }
 mcaAjaxChange();
+
+function sort_and_unique( my_array ) {
+    my_array.sort(value);
+    function value(a,b) {
+      if (a.val < b.val)
+          return -1;
+       else if (a.val == b.val)
+          return 0;
+       else
+          return 1;
+    }
+
+    for ( var i = 1; i < my_array.length; i++ ) {
+        if ( my_array[i]['val'] === my_array[ i - 1 ]['val'] ) {
+            my_array.splice( i--, 1 );
+        }
+    }
+    return my_array;
+};
