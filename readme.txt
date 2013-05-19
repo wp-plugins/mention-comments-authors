@@ -39,12 +39,57 @@ This WordPress plugin is based on ["jquery-sew" jQuery plugin](https://github.co
 5. Be sure to apply the filter "commment_text" each time you load comments in ajax 
 3. All done ! ;-)
 
+== Frequently Asked Questions ==
+
+= How to customize Mention Comment's Authors apparence ? =
+
+You can Easaly overide MCA style, in CSS, because all style use only one class (refer to the *mca-styles.css* file)
+But if you prefer, you can dequeue plugin's style and include (and modify) the plugin's stylesheet into your own theme file.
+
+To disable the inclusion of the style sheet, just add this code to the functions.php file of your theme :
+`add_filter( 'mca-load-styles', '__return_false' );`
+
+= Why the plugin isn't working ? =
+
+There are several reasons why the plugin does not work:
+
+* make sure your theme uses properly "comment_text" filter hook to display the comments
+* make sure your theme uses properly "comment_form" action hook after the comment form
+* make sure your theme uses properly "comment_post" action hook after publishing comments (if you're running an ajax based comment system). Don't forget to pass the arguments to this hook.
+* make sure there are no conflit between the plugin and your javascripts file (regards to dependancies !), maybe your script have to load after the plugin...
+
+= How to disable (or filter) mail sending ? =
+
+The plugin automatically sends an email to comment's authors having been mentioned by another user.
+If you want to disable this feature, just paste this code to the functions.php file of your theme :
+`add_filter( 'mca_send_email_on_mention', '__return_false' );`
+
+But if you want, you can also and conditions.
+To help you filter, the hook embeds the comment and the list of recipients expected.
+
+For example, if you want to doesn't send mail to commentators already mailed by the "subscribe to comments" plugin, You can do this :
+`add_filter( 'mca_filter_recipient','dont_send_user_who_already_subscribe', 100, 2 );
+function dont_send_user_who_already_subscribe( $recipients, $comment ) {
+    global $wpdb;
+    $su = $wpdb->get_results( "
+        SELECT comment_author 
+        FROM {$wpdb->comments} 
+        WHERE comment_subscribe = 'Y' 
+        AND comment_post_ID = {$comment->comment_post_ID};", 'ARRAY_N' );
+
+    foreach( $su as $val )
+        if( array_key_exists( sanitize_title( $val ), $recipients ) )
+            unset( $recipients[ sanitize_title( $val ) ] );
+
+    return $recipients;
+}`
+
 == Changelog ==
 
 = 0.9.1 =
 * Prevent fatal error of mcaAuthors undefined
 * On non-ajax mod, return only approved prevent commentators
-* add filter hook for mail composition and mail sending
+* add filter hooks for mail composition and mail sending
 
 = 0.9 =
 * Initial release

@@ -147,12 +147,15 @@ SEND EMAILS TO POKED ONES
 * @var pattern REGEX PATTERN
 * @var matches ARRAY results of the preg_match_all()
 
+* @since 0.9.2 new mca_filter_recipient FILTER HOOK to filter email recipients
+
 
 */
 function mca_email_poked_ones( $comment_id ) {
     if( add_filter( 'mca_send_email_on_mention', true ) ) {
         $comment = get_comment( $comment_id );
         $prev_authors = mca_get_previous_commentators( $comment->comment_post_ID, $comment_id, true );
+        $prev_authors = apply_filters( 'mca_filter_recipient', $prev_authors, $comment );
         //do preg_match
         $pattern = '/(?:^|\s)\@(' . implode( '|', array_keys( $prev_authors ) ) . ')(?:$|\s|\.|,)/';
         preg_match_all( $pattern, $comment->comment_content, $matches );
