@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=A4P2W
 Tags: mention, twitter, facebook, poke, comments, authors, cite, quote, comment, response, answer, commentator, reply, mentions
 Requires at least: 3.0
 Tested up to: 3.5.1
-Stable tag: 0.9.2
+Stable tag: 0.9.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -86,8 +86,12 @@ function dont_send_user_who_already_subscribe( $recipients, $comment ) {
 
 == Changelog ==
 
-= 0.9.2 =
+= 0.9.4 =
+* Add filter hook "mca_comment_form" to target the comment form textarea
+* Compact javascripts into one package, compatible with jQuery 1.9 (embed browser detection)
+* Solve bugs...
 
+= 0.9.2 =
 * Improve filtering recipients system
 * Solve minor bugs
 
