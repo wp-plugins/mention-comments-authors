@@ -15,10 +15,11 @@ INIT CONSTANT & LANGS
 */
 DEFINE( 'MCA_PLUGIN_URL', trailingslashit( WP_PLUGIN_URL ) . basename( dirname( __FILE__ ) ) );
 DEFINE( 'MCA_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
-global $mcaAuthors;
 
 function mca_lang_init() {
     load_plugin_textdomain( 'mca', false, basename( dirname( __FILE__ ) ) . '/langs/' );
+    global $mcaAuthors;
+    $mcaAuthors = array();
 }
 add_action( 'init', 'mca_lang_init' );
 
@@ -61,7 +62,7 @@ CATCH NAME IN COMMENTS & ADD ANCHOR LINK (OR OPACITY)
 * @uses mca_get_previous_commentators FUNCTION to retrieve full list of authors (only ajax mod)
 * @uses mcaajaxenable FILTER HOOK to turn plugin into ajax mod (another script is loaded, different functions are used)
 */
-function mca_modify_comment_text( $content, $com ) {
+function mca_modify_comment_text( $content, $com = '' ) {
     global $mcaAuthors;
 
     if( apply_filters( 'mcaajaxenable', false ) )
@@ -121,7 +122,7 @@ RETRIEVE LAST COMMENTATORS KEYS/NAMES
 */
 function mca_get_previous_commentators( $postid, $commid, $email = false ) {
     global $wpdb;
-    $prev = $wpdb->get_results( $wpdb->prepare("SELECT DISTINCT comment_author,comment_author_email FROM $wpdb->comments WHERE comment_post_ID = $postid AND comment_ID < $commid", 'ARRAY_N' ) );
+    $prev = $wpdb->get_results( $wpdb->prepare("SELECT DISTINCT comment_author,comment_author_email FROM $wpdb->comments WHERE comment_post_ID = $postid AND comment_ID < $commid AND comment_approved = '1'", 'ARRAY_N' ) );
     $out = array();
     if( $email )
         foreach( $prev as $p )

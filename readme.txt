@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=A4P2W
 Tags: mention, twitter, facebook, poke, comments, authors, cite, quote, comment, response, answer, commentator, reply, mentions
 Requires at least: 3.0
 Tested up to: 3.5.1
-Stable tag: 0.9
+Stable tag: 0.9.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -40,6 +40,11 @@ This WordPress plugin is based on ["jquery-sew" jQuery plugin](https://github.co
 3. All done ! ;-)
 
 == Changelog ==
+
+= 0.9.1 =
+* Prevent fatal error of mcaAuthors undefined
+* On non-ajax mod, return only approved prevent commentators
+* add filter hook for mail composition and mail sending
 
 = 0.9 =
 * Initial release
