@@ -4,7 +4,7 @@ Plugin Name: Mention comment's Authors
 Plugin URI: http://wabeo.fr
 Description: "Mention comment's authors" is a plugin that improves the WordPress comments fonctionality, adding a response system between authors.
 When adding a comment, your readers can directly mentioning the author of another comment, like facebook or twitter do,using the "@" symbol.
-Version: 0.9
+Version: 0.9.1
 Author: Willy Bahuaud
 Author URI: http://wabeo.fr
 License: GPLv2 or later
