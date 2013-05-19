@@ -2,7 +2,7 @@
 function mcaAjaxChange(){
     jQuery(document).ready(function($){  
 
-        $comment = $('#comment');
+        $comment = $(mcaCommentTextarea);
         if($comment.length > 0){
             //FIND mcaAuthors
             var mcaAuthors = new Array;
@@ -49,8 +49,8 @@ function mcaAjaxChange(){
                         $ishim = $(this);
                 });
             });
-        });
-    }
+        }
+    });
 }
 mcaAjaxChange();
 

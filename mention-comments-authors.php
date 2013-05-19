@@ -4,7 +4,7 @@ Plugin Name: Mention comment's Authors
 Plugin URI: http://wabeo.fr
 Description: "Mention comment's authors" is a plugin that improves the WordPress comments fonctionality, adding a response system between authors.
 When adding a comment, your readers can directly mentioning the author of another comment, like facebook or twitter do,using the "@" symbol.
-Version: 0.9.2
+Version: 0.9.3
 Author: Willy Bahuaud
 Author URI: http://wabeo.fr
 License: GPLv2 or later
@@ -31,23 +31,24 @@ LOAD JS ON FRONT OFFICE
 * @uses mcaajaxenable FILTER HOOK to turn plugin into ajax mod (another script is loaded, different functions are used)
 */
 function mca_enqueue_comments_scripts() {
-    wp_register_style( 'mca-styles', MCA_PLUGIN_URL . '/mca-styles.css', false, '0.9', 'all' );
+    wp_register_style( 'mca-styles', MCA_PLUGIN_URL . '/mca-styles.css', false, '1.2', 'all' );
     if( apply_filters( 'mca-load-styles', true ) )
         wp_enqueue_style( 'mca-styles' );
 
-    wp_register_script( 'caretposition', MCA_PLUGIN_URL . '/js/jquery.caretposition.js', array( 'jquery' ), '0.9', true );
-    wp_register_script( 'sew', MCA_PLUGIN_URL . '/js/jquery.sew.min.js', array( 'jquery','caretposition' ), '0.9', true );
-    wp_register_script( 'mca-comment-script', MCA_PLUGIN_URL . '/js/mca-comment-script.js', array( 'jquery','caretposition','sew' ), '0.9', true );
-    wp_register_script( 'mca-comment-script-ajax', MCA_PLUGIN_URL . '/js/mca-comment-script-ajax.js', array( 'jquery','caretposition','sew' ), '0.9', true );
+    wp_register_script( 'jquery-mention', MCA_PLUGIN_URL . '/js/jquery-mention.min.js', array( 'jquery' ), '1.2', true );
+    wp_register_script( 'mca-comment-script', MCA_PLUGIN_URL . '/js/mca-comment-script.js', array( 'jquery','jquery-mention' ), '1.2', true );
+    wp_register_script( 'mca-comment-script-ajax', MCA_PLUGIN_URL . '/js/mca-comment-script-ajax.js', array( 'jquery','jquery-mention' ), '1.2', true );
 
     wp_enqueue_script( 'jquery' );
-    wp_enqueue_script( 'caretposition' );
-    wp_enqueue_script( 'sew' );
+    wp_enqueue_script( 'jquery-mention' );
 
-    if( ! apply_filters( 'mcaajaxenable', false ) )
+    if( ! apply_filters( 'mcaajaxenable', false ) ){
         wp_enqueue_script( 'mca-comment-script' );
-    else 
+        wp_localize_script( 'mca-comment-script', 'mcaCommentTextarea', apply_filters( 'mca_comment_form', 'textarea[name="comment"]' ) );
+    } else {
         wp_enqueue_script( 'mca-comment-script-ajax' );
+        wp_localize_script( 'mca-comment-script-ajax', 'mcaCommentTextarea', apply_filters( 'mca_comment_form', 'textarea[name="comment"]' ) );
+    }
 }
 add_action( 'wp_enqueue_scripts', 'mca_enqueue_comments_scripts' );
 

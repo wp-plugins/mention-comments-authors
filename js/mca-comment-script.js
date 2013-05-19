@@ -1,6 +1,6 @@
 jQuery(document).ready(function($){
 
-    $comment = $('#comment');
+    $comment = $(mcaCommentTextarea);
     if($comment.length > 0){
         //ADD AUTOSUGGEST
         var customItemTemplate = "<div><span />&nbsp;<small /></div>";
