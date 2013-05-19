@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=A4P2W
 Tags: mention, twitter, facebook, poke, comments, authors, cite, quote, comment, response, answer, commentator, reply, mentions
 Requires at least: 3.0
 Tested up to: 3.5.1
-Stable tag: 0.9.1
+Stable tag: 0.9.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,11 @@ function dont_send_user_who_already_subscribe( $recipients, $comment ) {
 }`
 
 == Changelog ==
+
+= 0.9.2 =
+
+* Improve filtering recipients system
+* Solve minor bugs
 
 = 0.9.1 =
 * Prevent fatal error of mcaAuthors undefined
