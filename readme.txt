@@ -39,6 +39,10 @@ This WordPress plugin is based on ["jquery-sew" jQuery plugin](https://github.co
 5. Be sure to apply the filter "commment_text" each time you load comments in ajax 
 3. All done ! ;-)
 
+== Screenshots ==
+
+1. Screen capture of Mention comment's Authors in action
+
 == Frequently Asked Questions ==
 
 = How to customize Mention Comment's Authors apparence ? =
