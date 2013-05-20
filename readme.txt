@@ -1,4 +1,4 @@
-=== Mention commment's Authors by Wabeo ===
+=== Mention comment's Authors by Wabeo ===
 Contributors: willybahuaud
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=A4P2WCN4TZK26&lc=FR&item_name=Wabeo&item_number=3
 Tags: mention, twitter, facebook, poke, comments, authors, cite, quote, comment, response, answer, commentator, reply, mentions
