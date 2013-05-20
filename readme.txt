@@ -75,7 +75,7 @@ function dont_send_user_who_already_subscribe( $recipients, $comment ) {
         SELECT comment_author 
         FROM {$wpdb->comments} 
         WHERE comment_subscribe = 'Y' 
-        AND comment_post_ID = {$comment->comment_post_ID};", 'ARRAY_N' );
+        AND comment_post_ID = {$comment->comment_post_ID};", ARRAY_N );
 
     foreach( $su as $val )
         if( array_key_exists( sanitize_title( $val ), $recipients ) )
