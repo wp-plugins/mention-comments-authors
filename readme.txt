@@ -22,6 +22,8 @@ This mention plugin add two features :
 
 This WordPress plugin is based on ["jquery-sew" jQuery plugin](https://github.com/tactivos/jquery-sew), by [mural.ly](https://mural.ly/).
 
+You can find more information on this post : [wabeo : Un système de réponse dans les commentaires](http://wabeo.fr/blog/systeme-reponse-commentaires/)
+
 == Installation ==
 
 = For a non-ajax website =
