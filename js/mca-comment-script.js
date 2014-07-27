@@ -25,11 +25,15 @@ jQuery(document).ready(function($){
             var $elems = $('.mca-author');
 
             var $ishim = null;
+            var elemPassed = false;
 
             $(this).parents('.mca-author').addClass('mca-fired');
 
             $elems.each(function(index){
-                if($(this).hasClass('mca-fired') || index == $elems.length-1){
+                if ( $(this).hasClass('mca-fired') ) {
+                    elemPassed = true;
+                }
+                if( ( elemPassed && $ishim ) || index == $elems.length-1){
                     $ishim.addClass('mca-prevent-elem').parent().addClass('mca-comment-text-wrapper');
                     $('body,html').animate({scrollTop:$ishim.offset().top-200}, 200);
                     return false;

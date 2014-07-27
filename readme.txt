@@ -3,8 +3,8 @@ Contributors: willybahuaud
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=A4P2WCN4TZK26&lc=FR&item_name=Wabeo&item_number=3
 Tags: mention, twitter, facebook, poke, comments, authors, cite, quote, comment, response, answer, commentator, reply, mentions
 Requires at least: 3.0
-Tested up to: 3.9
-Stable tag: 0.9.4
+Tested up to: 3.9.1
+Stable tag: 0.9.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -91,6 +91,9 @@ function dont_send_user_who_already_subscribe( $recipients, $comment ) {
 1. Screen capture of Mention comment's Authors in action
 
 == Changelog ==
+
+= 0.9.5 =
+* Now compatible with nested comments
 
 = 0.9.4 =
 * Add filter hook "mca_comment_form" to target the comment form textarea
