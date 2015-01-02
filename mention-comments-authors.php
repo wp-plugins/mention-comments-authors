@@ -4,7 +4,7 @@ Plugin Name: Mention comment's Authors
 Plugin URI: http://wabeo.fr
 Description: "Mention comment's authors" is a plugin that improves the WordPress comments fonctionality, adding a response system between authors.
 When adding a comment, your readers can directly mentioning the author of another comment, like facebook or twitter do,using the "@" symbol.
-Version: 0.9.5
+Version: 0.9.6
 Author: Willy Bahuaud
 Author URI: http://wabeo.fr
 License: GPLv2 or later
@@ -42,7 +42,7 @@ function mca_enqueue_comments_scripts() {
     wp_enqueue_script( 'jquery' );
     wp_enqueue_script( 'jquery-mention' );
 
-    if( ! apply_filters( 'mcaajaxenable', false ) ){
+    if( ! apply_filters( 'mcaajaxenable', false ) ) {
         wp_enqueue_script( 'mca-comment-script' );
         wp_localize_script( 'mca-comment-script', 'mcaCommentTextarea', apply_filters( 'mca_comment_form', 'textarea[name="comment"]' ) );
     } else {
@@ -63,32 +63,38 @@ CATCH NAME IN COMMENTS & ADD ANCHOR LINK (OR OPACITY)
 * @uses mca_get_previous_commentators FUNCTION to retrieve full list of authors (only ajax mod)
 * @uses mcaajaxenable FILTER HOOK to turn plugin into ajax mod (another script is loaded, different functions are used)
 */
+add_filter('comment_text', 'mca_modify_comment_text', 10, 2);
 function mca_modify_comment_text( $content, $com = '' ) {
+    if ( is_admin() ) {
+        return $content;
+    }
     global $mcaAuthors;
 
-    if( apply_filters( 'mcaajaxenable', false ) )
+    if( apply_filters( 'mcaajaxenable', false ) ) {
         $mcaAuthors = mca_get_previous_commentators( $com->comment_post_ID, $com->comment_ID );
-    else {
-        if( ! is_array( $mcaAuthors ) )
+    } else {
+        if( ! is_array( $mcaAuthors ) ) {
             $mcaAuthors = array();
+        }
 
         $newEntry = $com->comment_author;
-        if( ! in_array( $newEntry, $mcaAuthors ) )
+        if( ! in_array( $newEntry, $mcaAuthors ) ) {
             $mcaAuthors[ sanitize_title( $com->comment_author ) ] = $newEntry;
+        }
     }
     //Rearrange content
-    $modifiedcontent = preg_replace_callback('/(?:^|\s)\@([a-zA-Z0-9-]*)(?:$|\s|\.|,)/', 'mca_comment_callback', $content);
-    if( apply_filters( 'mcaajaxenable', false ) )
+    $modifiedcontent = preg_replace_callback('/((?:^|\s))\@([a-zA-Z0-9-]*)((?:$|\s|\.|,))/', 'mca_comment_callback', $content);
+    if( apply_filters( 'mcaajaxenable', false ) ) {
         return '<div class="mca-author" data-name="' . sanitize_title( $com->comment_author ) . '" data-realname="' . esc_attr( $com->comment_author ) . '">' . $modifiedcontent . '</div>';
-    else
+    } else {
         return '<div class="mca-author" data-name="' . sanitize_title( $com->comment_author ) . '">' . $modifiedcontent . '</div>';
+    }
 }
-add_filter('comment_text', 'mca_modify_comment_text', 10, 2);
 
 function mca_comment_callback( $matches ) {
     global $mcaAuthors;
-    $name = ( isset( $mcaAuthors[ $matches[1] ] ) ) ? $mcaAuthors[ $matches[1] ] : $matches[1];
-    return '<button data-target="' . $matches[1] . '" class="mca-button">@' . $name . '</button>';
+    $name = ( isset( $mcaAuthors[ $matches[2] ] ) ) ? $mcaAuthors[ $matches[2] ] : $matches[2];
+    return $matches[1] . '<button type="button" data-target="' . $matches[2] . '" class="mca-button">@' . $name . '</button>' . $matches[3];
 }
 
 /**
@@ -100,6 +106,7 @@ RETRIEVE AUTHORS NAMES ON THE OTHER SIDE (SAVING ONE)
 
 * @uses mcaajaxenable FILTER HOOK to turn plugin into ajax mod (another script is loaded, different functions are used)
 */
+add_action( 'comment_form', 'mca_printnames' );
 function mca_printnames() {
     if( ! apply_filters( 'mcaajaxenable', false ) ) {
         global $mcaAuthors;
@@ -113,7 +120,6 @@ function mca_printnames() {
             wp_localize_script( 'mca-comment-script', 'mcaAuthors', $authors );
     }
 }
-add_action( 'comment_form', 'mca_printnames' );
 
 /**
 RETRIEVE LAST COMMENTATORS KEYS/NAMES
@@ -148,12 +154,14 @@ SEND EMAILS TO POKED ONES
 * @var pattern REGEX PATTERN
 * @var matches ARRAY results of the preg_match_all()
 
+* @since 0.9.6 mail are send only for approved comments
 * @since 0.9.2 new mca_filter_recipient FILTER HOOK to filter email recipients
 
 
 */
-function mca_email_poked_ones( $comment_id ) {
-    if( add_filter( 'mca_send_email_on_mention', true ) ) {
+add_action( 'comment_post', 'mca_email_poked_ones', 90, 2 ); // Launching after spam test
+function mca_email_poked_ones( $comment_id, $approved ) {
+    if( add_filter( 'mca_send_email_on_mention', true ) && $approved ) {
         $comment = get_comment( $comment_id );
         $prev_authors = mca_get_previous_commentators( $comment->comment_post_ID, $comment_id, true );
         $prev_authors = apply_filters( 'mca_filter_recipient', $prev_authors, $comment );
@@ -166,7 +174,7 @@ function mca_email_poked_ones( $comment_id ) {
             $name = $prev_authors[ $m ][0];
             $titre = get_the_title( $comment->comment_post_ID );
 
-            $subject = wp_sprintf( __( ' %s replied to your comment on the article &laquo;%s&raquo;' , 'mca' ), $comment->comment_author, $titre );
+            $subject = wp_sprintf( __( ' %s replied to your comment on the article «%s»' , 'mca' ), $comment->comment_author, $titre );
             $subject = apply_filters( 'mca-email-subject', $subject, $comment, $name, $mail, $titre );
 
             $message = '<div><h1>' . $subject . '</h1><div style="Border:5px solid grey;padding:1em;">' . apply_filters( 'the_content', wp_trim_words( $comment->comment_content, 25 ) ) . "</div></div><p>" . __( 'Read post', 'mca' ) . ' : <a href="' . get_permalink( $comment->comment_post_ID ) . '">' . $titre . '</a> ' . __( 'on', 'mca' ) . ' <a href="' . get_bloginfo( 'url' ) . '">' . get_bloginfo( 'name' ) . '</a></p>';
@@ -177,4 +185,10 @@ function mca_email_poked_ones( $comment_id ) {
         }
     }
 }
-add_action( 'comment_post', 'mca_email_poked_ones', 90 ); // Launching after spam test
+
+add_action( 'wp_set_comment_status', 'mca_maybe_email_poked_ones', 90, 2 );
+function mca_maybe_email_poked_ones( $comment_id, $comment_status ) {
+    if ( in_array( $comment_status, array( '1', 'approve' ) ) ) {
+        mca_email_poked_ones( $comment_id, true );
+    }
+}
