@@ -89,6 +89,7 @@ function dont_send_user_who_already_subscribe( $recipients, $comment ) {
 == Screenshots ==
 
 1. Screen capture of Mention comment's Authors in action
+2. Screen capture of Mention comment's Authors on the admin side
 
 == Changelog ==
 
