@@ -2,9 +2,9 @@
 Contributors: willybahuaud
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=A4P2WCN4TZK26&lc=FR&item_name=Wabeo&item_number=3
 Tags: mention, twitter, facebook, poke, comments, authors, cite, quote, comment, response, answer, commentator, reply, mentions
-Requires at least: 3.0
+Requires at least: 3.5
 Tested up to: 4.1
-Stable tag: 0.9.6
+Stable tag: 0.9.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -91,6 +91,10 @@ function dont_send_user_who_already_subscribe( $recipients, $comment ) {
 1. Screen capture of Mention comment's Authors in action
 
 == Changelog ==
+
+= 0.9.7 =
+* You can now create mentions on admin side
+* Update jQuery.sew (lib improvement)
 
 = 0.9.6 =
 * Regex improvement (preserve spaces and commas around mentions)
