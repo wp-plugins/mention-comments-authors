@@ -86,6 +86,39 @@ function dont_send_user_who_already_subscribe( $recipients, $comment ) {
     return $recipients;
 }`
 
+= How to customize mail subject ? =
+
+You can use the `mca-email-subject` filter.
+
+For example:
+
+`add_filter( 'mca-email-subject', 'my_mail_subject', 10, 5 );
+function my_mail_subject( $subject, $comment, $name, $mail, $title ) {
+    // $subject is actual text
+    // $comment is the comment object
+    // $name and $mail of the comment author
+    // $title is the post title
+    return sprintf( 'Hello, %s answer to you on %s !', $name, $title );
+}`
+
+= How to customize mail content ? =
+
+You can use the `mca-email-subject` filter.
+
+For example:
+
+`add_filter( 'mca-email-message', 'my_mail_content', 10, 5 );
+function my_mail_content( $content, $comment, $name, $mail, $title ) {
+    // $content is actual text
+    // $comment is the comment object
+    // $name and $mail of the comment author
+    // $title is the post title
+    $out = array( sprintf( '<p>%s just answer to you !<br> Her is his message:</p>', $name ) );
+    $out[] = '<blockquote>' . wp_trim_words( $comment->comment_content, 80 ) . '...</blockquote>'; 
+    $out[] = '<a href="' . get_comment_link( $comment->comment_id ) . '">Read more</a>';
+    return implode ( $out );
+}`
+
 == Screenshots ==
 
 1. Screen capture of Mention comment's Authors in action
